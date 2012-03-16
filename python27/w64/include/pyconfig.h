@@ -100,6 +100,20 @@ WIN32 is still required for the locale module.
 #define environ (NULL)
 #endif
 
+/* MSVC defines _WINxx to differentiate the windows platform types
+
+   Note that for compatibility reasons _WIN32 is defined on Win32
+   *and* on Win64. For the same reasons, in Python, MS_WIN32 is
+   defined on Win32 *and* Win64. Win32 only code must therefore be
+   guarded as follows:
+   	#if defined(MS_WIN32) && !defined(MS_WIN64)
+   Some modules are disabled on Itanium processors, therefore we
+   have MS_WINI64 set for those targets, otherwise MS_WINX64
+*/
+#ifdef _WIN64
+#define MS_WIN64
+#endif
+
 /* Compiler specific defines */
 
 /* ------------------------------------------------------------------------*/
@@ -127,20 +141,6 @@ WIN32 is still required for the locale module.
 #define _Py_STRINGIZE(X) _Py_STRINGIZE1((X))
 #define _Py_STRINGIZE1(X) _Py_STRINGIZE2 ## X
 #define _Py_STRINGIZE2(X) #X
-
-/* MSVC defines _WINxx to differentiate the windows platform types
-
-   Note that for compatibility reasons _WIN32 is defined on Win32
-   *and* on Win64. For the same reasons, in Python, MS_WIN32 is
-   defined on Win32 *and* Win64. Win32 only code must therefore be
-   guarded as follows:
-   	#if defined(MS_WIN32) && !defined(MS_WIN64)
-   Some modules are disabled on Itanium processors, therefore we
-   have MS_WINI64 set for those targets, otherwise MS_WINX64
-*/
-#ifdef _WIN64
-#define MS_WIN64
-#endif
 
 /* set the COMPILER */
 #ifdef MS_WIN64
